@@ -828,6 +828,7 @@ COMMIT TRANSACTION
 GO
 
 
+
 --UserID הצגת מוצרים לפי
 CREATE PROC GetCartItemsByUserID
 (
@@ -838,7 +839,7 @@ BEGIN TRANSACTION
 SELECT Products.ProductID, UserID, CategoryCode, SubCategoryCode, ConditionCode,
 ProductName, Price, SellTypeCode, CountryCode, ShipsToTypeCode,
 ShippingCosts, Description, Quantity, Size, UploadDate,
-ImagesSource, IsHidden FROM Products INNER JOIN Cart ON Cart.ProductID = Products.ProductID WHERE CartID = @CartID
+ImagesSource, IsHidden FROM Products INNER JOIN Cart ON Cart.ProductID = Products.ProductID WHERE CartID = @CartID AND IsHidden = 0
 IF @@ERROR<>0
 BEGIN
 	ROLLBACK TRANSACTION
