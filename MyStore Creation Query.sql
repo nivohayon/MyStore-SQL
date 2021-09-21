@@ -46,13 +46,6 @@ SellTypeName nvarchar(30) NOT NULL
 )
 GO
 
-CREATE TABLE OrderStatus
-(
-OrderStatusID int IDENTITY PRIMARY KEY NOT NULL,
-OrderStatusName nvarchar(30) NOT NULL
-)
-GO
-
 CREATE TABLE UserAddresses
 (
 AddressID int IDENTITY PRIMARY KEY NOT NULL,
@@ -125,7 +118,6 @@ CREATE TABLE OrderItems
 (
 OrderID nvarchar(30) FOREIGN KEY REFERENCES Orders (OrderID) NOT NULL,
 ProductID int FOREIGN KEY REFERENCES Products (ProductID) NOT NULL,
-OrderStatusID int FOREIGN KEY REFERENCES OrderStatus (OrderStatusID)
 )
 GO
 
@@ -892,10 +884,9 @@ GO
 CREATE PROC GetOrderItems
 (@OrderID nvarchar(30))
 AS
-SELECT Orders.OrderID, Products.ProductID, Products.UserID, Products.ProductName, (Products.Price + Products.ShippingCosts) AS 'Total', OrderStatus.OrderStatusName, Products.ImagesSource, Orders.CreatedOn
+SELECT Orders.OrderID, Products.ProductID, Products.UserID, Products.ProductName, (Products.Price + Products.ShippingCosts) AS 'Total', Products.ImagesSource, Orders.CreatedOn
 FROM OrderItems INNER JOIN Orders ON Orders.OrderID = OrderItems.OrderID
 INNER JOIN Products ON Products.ProductID = OrderItems.ProductID
-INNER JOIN OrderStatus ON OrderStatus.OrderStatusID = OrderItems.OrderStatusID
 WHERE Orders.OrderID = @OrderID
 GO
 
@@ -1071,3 +1062,36 @@ GO
 
 SELECT * FROM ShipsToTypes
 GO
+
+-- DROP ALL TABLES SEQUENCE
+
+--DROP TABLE Replies
+--GO
+--DROP TABLE Chats
+--GO
+--DROP TABLE UserAddresses
+--GO
+--DROP TABLE OrderItems
+--GO
+--DROP TABLE Orders
+--GO
+--DROP TABLE Cart
+--GO
+--DROP TABLE Products
+--GO
+--DROP TABLE Users
+--GO
+--DROP TABLE OrderStatus
+--GO
+--DROP TABLE SubCategories
+--GO
+--DROP TABLE Categories
+--GO
+--DROP TABLE Conditions
+--GO
+--DROP TABLE SellTypes
+--GO
+--DROP TABLE Countries
+--GO
+--DROP TABLE ShipsToTypes
+--GO
