@@ -364,8 +364,7 @@ GO
 CREATE PROC CreateChat
 (
 @UserOneID int,
-@UserTwoID int,
-@Subject nvarchar(80)
+@UserTwoID int
 )
 AS
 BEGIN TRANSACTION
@@ -374,8 +373,8 @@ BEGIN
 SELECT 0
 END
 ELSE BEGIN
-INSERT Chats(UserOneID, UserTwoID, Subject, CreatedOn) 
-VALUES (@UserOneID, @UserTwoID, @Subject, GETDATE())
+INSERT Chats(UserOneID, UserTwoID, CreatedOn) 
+VALUES (@UserOneID, @UserTwoID, GETDATE())
 END
 IF @@ERROR<>0
 BEGIN
@@ -844,32 +843,8 @@ CREATE PROC AddItemToOrder
 )
 AS
 BEGIN TRANSACTION
-DECLARE @OrderStatusCode int
-SET @OrderStatusCode = 1
-INSERT OrderItems(OrderID, ProductID, OrderStatusID) VALUES (@OrderID, @ProductID, @OrderStatusCode)
+INSERT OrderItems(OrderID, ProductID) VALUES (@OrderID, @ProductID)
 UPDATE Products SET IsHidden = 1 WHERE ProductID = @ProductID
-IF @@ERROR<>0
-BEGIN
-	ROLLBACK TRANSACTION
-	PRINT(@@ERROR)
-	RETURN
-END
-COMMIT TRANSACTION
-GO
-
-
---שינוי סטטוס מוצר בהזמנה
-CREATE PROC ChangeProductStatus
-(
-@OrderID nvarchar(30),
-@ProductID int,
-@OrderStatusCode int
-)
-AS
-BEGIN TRANSACTION
-UPDATE OrderItems
-SET OrderStatusID = @OrderStatusCode
-WHERE OrderID = @OrderID AND ProductID = @ProductID
 IF @@ERROR<>0
 BEGIN
 	ROLLBACK TRANSACTION
@@ -1038,13 +1013,6 @@ SELECT * FROM Countries
 GO
 
 
--- כל הסטטוסים של מוצר בהזמנה
-INSERT OrderStatus(OrderStatusName) VALUES ('Not Shipped')
-INSERT OrderStatus(OrderStatusName) VALUES ('Shipped')
-INSERT OrderStatus(OrderStatusName) VALUES ('Recieved')
-GO
-
-
 -- כל הסוגי מכירת מוצר
 INSERT SellTypes(SellTypeName) VALUES ('Buy Now')
 INSERT SellTypes(SellTypeName) VALUES ('Auction')
@@ -1063,6 +1031,10 @@ GO
 SELECT * FROM ShipsToTypes
 GO
 
+
+SELECT * FROM Chats
+
+
 -- DROP ALL TABLES SEQUENCE
 
 --DROP TABLE Replies
@@ -1080,8 +1052,6 @@ GO
 --DROP TABLE Products
 --GO
 --DROP TABLE Users
---GO
---DROP TABLE OrderStatus
 --GO
 --DROP TABLE SubCategories
 --GO
