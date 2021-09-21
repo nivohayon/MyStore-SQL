@@ -1,4 +1,4 @@
--- δβγψϊ θαμΰεϊ
+ο»Ώ-- Χ”Χ’Χ“Χ¨Χª ΧΧ‘ΧΧΧ•Χª
 CREATE TABLE Users (
 	UserID int IDENTITY PRIMARY KEY NOT NULL,
 	FirstName nvarchar(30) NOT NULL,
@@ -134,7 +134,6 @@ CREATE TABLE Chats
 ChatID int IDENTITY PRIMARY KEY,
 UserOneID int FOREIGN KEY REFERENCES Users (UserID),
 UserTwoID int FOREIGN KEY REFERENCES Users (UserID),
-Subject nvarchar(80),
 CreatedOn datetime,
 LastReplySentOn datetime
 )
@@ -150,21 +149,21 @@ TimeSent datetime
 GO
 
 
---ιφιψϊ τψεφγεψεϊ
+--Χ™Χ¦Χ™Χ¨Χª Χ¤Χ¨Χ•Χ¦Χ“Χ•Χ¨Χ•Χª
 
 
--- ωιπει τεψξθ ϊΰψικ
+-- Χ©Χ™Χ Χ•Χ™ Χ¤Χ•Χ¨ΧΧ ΧªΧΧ¨Χ™Χ
 Set DateFormat dmy
 GO
 
 
--- δφτπϊ ριρξΰ
+-- Χ”Χ¦Χ¤Χ Χª Χ΅Χ™Χ΅ΧΧ
 CREATE PROC HashPass(@pass nvarchar(255), @out varbinary(max) output)
 AS
 SET @out = HASHBYTES('SHA2_512', @pass)
 GO
 
--- δΰν ΰιξιιμ χιιν
+-- Χ”ΧΧ ΧΧ™ΧΧ™Χ™Χ Χ§Χ™Χ™Χ
 CREATE PROC DoesEmailExists
 (@Email nvarchar(120))
 AS
@@ -180,7 +179,7 @@ BEGIN
 END
 GO
 
--- δΰν δων ξωϊξω χιιν
+-- Χ”ΧΧ Χ”Χ©Χ ΧΧ©ΧªΧΧ© Χ§Χ™Χ™Χ
 CREATE PROC IsUsernameExists
 (@Username nvarchar(120))
 AS
@@ -197,7 +196,7 @@ END
 GO
 
 
--- δερτϊ ξωϊξω
+-- Χ”Χ•Χ΅Χ¤Χª ΧΧ©ΧªΧΧ©
 CREATE PROC AddUser(
 @FirstName nvarchar(30),
 @LastName nvarchar(30),
@@ -225,7 +224,7 @@ COMMIT TRANSACTION
 GO
 
 
--- χαμϊ ριρξΰ ξεφτπϊ
+-- Χ§Χ‘ΧΧª Χ΅Χ™Χ΅ΧΧ ΧΧ•Χ¦Χ¤Χ Χª
 CREATE PROC GetHash (
 @Password nvarchar(30),
 @PasswordSalt nvarchar(100),
@@ -236,7 +235,7 @@ SELECT @Result = HASHBYTES('SHA2_512', CONCAT(@Password, @PasswordSalt))
 GO
 
 
--- ΰιξεϊ ξωϊξω
+-- ΧΧ™ΧΧ•Χª ΧΧ©ΧªΧΧ©
 CREATE PROC ValidateUser
 (
 @Email nvarchar(120),
@@ -247,7 +246,7 @@ AS
 DECLARE @PassSalt nvarchar(100)
 SELECT @PassSalt = PasswordSalt FROM Users WHERE Email = @Email
 DECLARE @PassHash varbinary(max)
-EXEC GetHash @Password, @PassSalt, @PassHash OUTPUT  -- ξχαμ ΰϊ δδφτπδ ωμ δριρξΰ ωδϊαχμδ
+EXEC GetHash @Password, @PassSalt, @PassHash OUTPUT  -- ΧΧ§Χ‘Χ ΧΧª Χ”Χ”Χ¦Χ¤Χ Χ” Χ©Χ Χ”Χ΅Χ™Χ΅ΧΧ Χ©Χ”ΧªΧ‘Χ§ΧΧ”
 IF ((SELECT PasswordHash FROM Users WHERE Email = @Email) = @PassHash)
 BEGIN
 SELECT @Result = UserID FROM Users WHERE Email = @Email AND PasswordHash = @PassHash
@@ -259,14 +258,14 @@ END
 GO
 
 
---ID δφβϊ ξωϊξω μτι
+--ID Χ”Χ¦Χ’Χª ΧΧ©ΧªΧΧ© ΧΧ¤Χ™
 CREATE PROC GetUserById(@UserID int)
 AS
 SELECT UserID, FirstName, LastName, Username, Email FROM Users WHERE UserID = @UserID
 GO
 
 
--- χαμϊ ων ξωϊξω μτι ξζδδ ωμ ξωϊξω
+-- Χ§Χ‘ΧΧª Χ©Χ ΧΧ©ΧªΧΧ© ΧΧ¤Χ™ ΧΧ–Χ”Χ” Χ©Χ ΧΧ©ΧªΧΧ©
 CREATE PROC GetUsernameById
 (
 @UserID int
@@ -277,7 +276,7 @@ WHERE UserID = @UserID
 GO
 
 
---ςγλεο τψθι ξωϊξω
+--ΧΆΧ“Χ›Χ•Χ Χ¤Χ¨ΧΧ™ ΧΧ©ΧªΧΧ©
 CREATE PROC EditUserInfo
 (
 @UserID int,
@@ -304,7 +303,7 @@ COMMIT TRANSACTION
 GO
 
 
--- δΰν δριρξΰ δηγωδ ωεπδ ξδριρξΰ δχιιξϊ
+-- Χ”ΧΧ Χ”Χ΅Χ™Χ΅ΧΧ Χ”Χ—Χ“Χ©Χ” Χ©Χ•Χ Χ” ΧΧ”Χ΅Χ™Χ΅ΧΧ Χ”Χ§Χ™Χ™ΧΧª
 CREATE PROC IsCurrentPasswordTheSame
 (
 @UserID int,
@@ -334,7 +333,7 @@ COMMIT TRANSACTION
 GO
 
 
--- ξηζιψ ΰϊ δξζδδ ωμ δξωϊξω μτι δΰιξιιμ
+-- ΧΧ—Χ–Χ™Χ¨ ΧΧª Χ”ΧΧ–Χ”Χ” Χ©Χ Χ”ΧΧ©ΧªΧΧ© ΧΧ¤Χ™ Χ”ΧΧ™ΧΧ™Χ™Χ
 CREATE PROC GetUserIDByEmail
 (
 @Email nvarchar(120)
@@ -344,7 +343,7 @@ SELECT UserID FROM Users WHERE Email=@Email
 GO
 
 
--- ωπδ ριρξΰ
+-- Χ©Χ Χ” Χ΅Χ™Χ΅ΧΧ
 CREATE PROC ChangePassword
 (
 @UserID int,
@@ -369,7 +368,7 @@ COMMIT TRANSACTION
 GO
 
 
---ιφιψϊ φΰθ
+--Χ™Χ¦Χ™Χ¨Χª Χ¦ΧΧ
 CREATE PROC CreateChat
 (
 @UserOneID int,
@@ -396,7 +395,7 @@ COMMIT TRANSACTION
 GO
 
 
---ξηιχϊ φΰθ
+--ΧΧ—Χ™Χ§Χª Χ¦ΧΧ
 CREATE PROC DeleteChat
 (
 @ChatID int
@@ -415,7 +414,7 @@ COMMIT TRANSACTION
 GO
 
 
---ωμιηϊ δεγςδ
+--Χ©ΧΧ™Χ—Χª Χ”Χ•Χ“ΧΆΧ”
 CREATE PROC SendMessage
 (
 @UserID int,
@@ -436,7 +435,7 @@ COMMIT TRANSACTION
 GO
 
 
--- ξηζιψ ΰϊ λμ δφΰθιν ωδξωϊξω πελη αδν
+-- ΧΧ—Χ–Χ™Χ¨ ΧΧª Χ›Χ Χ”Χ¦ΧΧΧ™Χ Χ©Χ”ΧΧ©ΧªΧΧ© Χ Χ•Χ›Χ— Χ‘Χ”Χ
 CREATE PROC GetAllChatsByUserID
 (
 @UserID int
@@ -454,7 +453,7 @@ COMMIT TRANSACTION
 GO
 
 
--- ξηζιψ ΰϊ λμ δδεγςεϊ αφΰθ μτι ξζδδ ωμ φΰθ
+-- ΧΧ—Χ–Χ™Χ¨ ΧΧª Χ›Χ Χ”Χ”Χ•Χ“ΧΆΧ•Χª Χ‘Χ¦ΧΧ ΧΧ¤Χ™ ΧΧ–Χ”Χ” Χ©Χ Χ¦ΧΧ
 CREATE PROC GetAllRepliesByChatID
 (
 @ChatID int
@@ -462,6 +461,7 @@ CREATE PROC GetAllRepliesByChatID
 AS
 BEGIN TRANSACTION
 SELECT * FROM Replies WHERE ChatID = @ChatID
+ORDER BY TimeSent
 IF @@ERROR<>0
 BEGIN
 	ROLLBACK TRANSACTION
@@ -472,7 +472,7 @@ COMMIT TRANSACTION
 GO
 
 
--- αεγχ ΰν χιιν φΰθ λαψ
+-- Χ‘Χ•Χ“Χ§ ΧΧ Χ§Χ™Χ™Χ Χ¦ΧΧ Χ›Χ‘Χ¨
 CREATE PROC DoesChatExists
 (
 @ChatID int,
@@ -492,7 +492,7 @@ COMMIT TRANSACTION
 GO
 
 
--- ξηζιψ ΰϊ δξζδδ ωμ δφΰθ μτι δξωϊϊτιν
+-- ΧΧ—Χ–Χ™Χ¨ ΧΧª Χ”ΧΧ–Χ”Χ” Χ©Χ Χ”Χ¦ΧΧ ΧΧ¤Χ™ Χ”ΧΧ©ΧªΧªΧ¤Χ™Χ
 CREATE PROC GetChatID
 (
 @UserOneID int,
@@ -517,7 +517,7 @@ COMMIT TRANSACTION
 GO
 
 
---δερτϊ λϊεαϊ μξωϊξω
+--Χ”Χ•Χ΅Χ¤Χª Χ›ΧªΧ•Χ‘Χª ΧΧΧ©ΧªΧΧ©
 CREATE PROC AddAddress
 (
 @UserID int,
@@ -544,7 +544,7 @@ COMMIT TRANSACTION
 GO
 
 
---ξηιχϊ λϊεαϊ
+--ΧΧ—Χ™Χ§Χª Χ›ΧªΧ•Χ‘Χª
 CREATE PROC DeleteAddress
 (
 @AddressID int
@@ -562,14 +562,14 @@ COMMIT TRANSACTION
 GO
 
 
--- δφβϊ λϊεαεϊ μτι ξζδδ ωμ ξωϊξω
+-- Χ”Χ¦Χ’Χª Χ›ΧªΧ•Χ‘Χ•Χª ΧΧ¤Χ™ ΧΧ–Χ”Χ” Χ©Χ ΧΧ©ΧªΧΧ©
 CREATE PROC GetAddressesByUserId
 (@UserID int)
 AS
 SELECT * FROM UserAddresses WHERE UserID = @UserID
 GO
 
---ςγλεο τψθι λϊεαϊ
+--ΧΆΧ“Χ›Χ•Χ Χ¤Χ¨ΧΧ™ Χ›ΧªΧ•Χ‘Χª
 CREATE PROC EditAddress
 (
 @AddressID int,
@@ -604,7 +604,7 @@ COMMIT TRANSACTION
 GO
 
 
--- δερτϊ ξεφψ
+-- Χ”Χ•Χ΅Χ¤Χª ΧΧ•Χ¦Χ¨
 CREATE PROC AddProduct
 (
 @UserID int,
@@ -640,7 +640,7 @@ COMMIT TRANSACTION
 GO
 
 
--- ςψεκ ξεφψ
+-- ΧΆΧ¨Χ•Χ ΧΧ•Χ¦Χ¨
 CREATE PROC EditProduct
 (
 @ProductID int,
@@ -684,7 +684,7 @@ END
 GO
 
 
--- ςψιλϊ ξχεψ ϊξεπεϊ
+-- ΧΆΧ¨Χ™Χ›Χª ΧΧ§Χ•Χ¨ ΧªΧΧ•Χ Χ•Χª
 CREATE PROC EditProductImagesSource(
 @ProductID int,
 @ImagesSource nvarchar(100)
@@ -704,7 +704,7 @@ COMMIT TRANSACTION
 GO
 
 
--- ξηιχϊ ξεφψ
+-- ΧΧ—Χ™Χ§Χª ΧΧ•Χ¦Χ¨
 CREATE PROC DeleteProduct
 (
 @ProductID int
@@ -724,7 +724,17 @@ COMMIT TRANSACTION
 GO
 
 
---δερτϊ ξεφψ μςβμδ
+-- Χ”Χ¦Χ’Χª Χ”ΧΧ•Χ¦Χ¨ ΧΧ¤Χ™ Χ”ΧΧ–Χ”Χ”
+CREATE PROC GetProductById
+(
+@ProductID int
+)
+AS
+SELECT * FROM Products WHERE ProductID = @ProductID
+GO
+
+
+--Χ”Χ•Χ΅Χ¤Χª ΧΧ•Χ¦Χ¨ ΧΧΆΧ’ΧΧ”
 CREATE PROC AddToCart
 (
 @CartID int,
@@ -746,7 +756,7 @@ COMMIT TRANSACTION
 GO
 
 
---ξηιχδ ξςβμδ
+--ΧΧ—Χ™Χ§Χ” ΧΧΆΧ’ΧΧ”
 CREATE PROC RemoveFromCart
 (
 @CartID int,
@@ -765,7 +775,7 @@ COMMIT TRANSACTION
 GO
 
 
--- δφβϊ τψιθιν αςβμδ μτι ξζδδ ξωϊξω
+-- Χ”Χ¦Χ’Χª Χ¤Χ¨Χ™ΧΧ™Χ Χ‘ΧΆΧ’ΧΧ” ΧΧ¤Χ™ ΧΧ–Χ”Χ” ΧΧ©ΧªΧΧ©
 CREATE PROC GetCartItemsByUserID
 (
 @CartID int
@@ -786,7 +796,7 @@ COMMIT TRANSACTION
 GO
 
 
---ιφιψϊ δζξπδ
+--Χ™Χ¦Χ™Χ¨Χª Χ”Χ–ΧΧ Χ”
 CREATE PROC MakeOrder
 (
 @OrderID nvarchar(30),
@@ -824,7 +834,17 @@ COMMIT TRANSACTION
 GO
 
 
---δερτϊ ξεφψ μδζξπδ
+-- Χ Χ™Χ§Χ•Χ™ ΧΆΧ’ΧΧ” ΧΧ—Χ¨Χ™ Χ©Χ”Χ”Χ–ΧΧ Χ” Χ©Χ•ΧΧΧ” Χ‘Χ”Χ¦ΧΧ—Χ”
+CREATE PROC ClearUserCart
+(
+@CartID int
+)
+AS
+DELETE FROM Cart WHERE CartID = @CartID
+GO
+
+
+--Χ”Χ•Χ΅Χ¤Χª ΧΧ•Χ¦Χ¨ ΧΧ”Χ–ΧΧ Χ”
 CREATE PROC AddItemToOrder
 (
 @OrderID nvarchar(30),
@@ -835,6 +855,7 @@ BEGIN TRANSACTION
 DECLARE @OrderStatusCode int
 SET @OrderStatusCode = 1
 INSERT OrderItems(OrderID, ProductID, OrderStatusID) VALUES (@OrderID, @ProductID, @OrderStatusCode)
+UPDATE Products SET IsHidden = 1 WHERE ProductID = @ProductID
 IF @@ERROR<>0
 BEGIN
 	ROLLBACK TRANSACTION
@@ -845,7 +866,7 @@ COMMIT TRANSACTION
 GO
 
 
---ωιπει ρθθερ ξεφψ αδζξπδ
+--Χ©Χ™Χ Χ•Χ™ Χ΅ΧΧΧ•Χ΅ ΧΧ•Χ¦Χ¨ Χ‘Χ”Χ–ΧΧ Χ”
 CREATE PROC ChangeProductStatus
 (
 @OrderID nvarchar(30),
@@ -867,7 +888,7 @@ COMMIT TRANSACTION
 GO
 
 
---δφβϊ λμ δξεφψιν αδζξπδ μτι ξζδδ δζξπδ
+--Χ”Χ¦Χ’Χª Χ›Χ Χ”ΧΧ•Χ¦Χ¨Χ™Χ Χ‘Χ”Χ–ΧΧ Χ” ΧΧ¤Χ™ ΧΧ–Χ”Χ” Χ”Χ–ΧΧ Χ”
 CREATE PROC GetOrderItems
 (@OrderID nvarchar(30))
 AS
@@ -879,7 +900,7 @@ WHERE Orders.OrderID = @OrderID
 GO
 
 
---ξηζιψδ ΰϊ λμ δξζδιν ωμ δδζξπεϊ μτι ξζδδ ξωϊξω
+--ΧΧ—Χ–Χ™Χ¨Χ” ΧΧª Χ›Χ Χ”ΧΧ–Χ”Χ™Χ Χ©Χ Χ”Χ”Χ–ΧΧ Χ•Χª ΧΧ¤Χ™ ΧΧ–Χ”Χ” ΧΧ©ΧªΧΧ©
 CREATE PROC GetUserOrders
 (@UserID int)
 AS
@@ -888,7 +909,7 @@ WHERE UserID = @UserID
 GO
 
 
---δφβϊ λμ δχθβεψιεϊ
+--Χ”Χ¦Χ’Χª Χ›Χ Χ”Χ§ΧΧ’Χ•Χ¨Χ™Χ•Χª
 CREATE PROC GetAllCategories
 AS
 SELECT * FROM Categories
@@ -896,7 +917,7 @@ ORDER BY CategoryName
 GO
 
 
---δφβϊ λμ δϊϊι χθβεψιεϊ
+--Χ”Χ¦Χ’Χª Χ›Χ Χ”ΧªΧªΧ™ Χ§ΧΧ’Χ•Χ¨Χ™Χ•Χª
 CREATE PROC GetAllSubCategories
 AS
 SELECT * FROM SubCategories
@@ -904,21 +925,21 @@ ORDER BY SubCategoryName
 GO
 
 
---δφβϊ λμ δξεφψιν
+--Χ”Χ¦Χ’Χª Χ›Χ Χ”ΧΧ•Χ¦Χ¨Χ™Χ
 CREATE PROC GetAllProducts
 AS
 SELECT * FROM Products WHERE IsHidden = 0
 GO
 
 
---δφβϊ λμ δξεφψιν μτι δξωϊξω ωδςμδ ΰεϊν
+--Χ”Χ¦Χ’Χª Χ›Χ Χ”ΧΧ•Χ¦Χ¨Χ™Χ ΧΧ¤Χ™ Χ”ΧΧ©ΧªΧΧ© Χ©Χ”ΧΆΧΧ” ΧΧ•ΧªΧ
 CREATE PROC GetUserProducts(@UserID int)
 AS
 SELECT * FROM Products
 WHERE UserID = @UserID AND IsHidden = 0
 GO
 
--- δφβϊ 5 δξεφψιν δΰηψεπιν ωδεςμε
+-- Χ”Χ¦Χ’Χª 5 Χ”ΧΧ•Χ¦Χ¨Χ™Χ Χ”ΧΧ—Χ¨Χ•Χ Χ™Χ Χ©Χ”Χ•ΧΆΧΧ•
 CREATE PROC GetLatestProducts
 AS
 SELECT TOP 5 * FROM Products
@@ -927,10 +948,10 @@ ORDER BY UploadDate DESC
 GO
 
 
--- δερτϊ θψιβψιν
+-- Χ”Χ•Χ΅Χ¤Χª ΧΧ¨Χ™Χ’Χ¨Χ™Χ
 
 
--- ξςγλο ΰϊ δζξο δΰηψεο ωπωμηδ αε δεγςδ αφΰθ ξρειιν
+-- ΧΧΆΧ“Χ›Χ ΧΧª Χ”Χ–ΧΧ Χ”ΧΧ—Χ¨Χ•Χ Χ©Χ Χ©ΧΧ—Χ” Χ‘Χ• Χ”Χ•Χ“ΧΆΧ” Χ‘Χ¦ΧΧ ΧΧ΅Χ•Χ™Χ™Χ
 CREATE TRIGGER T_LastSentMessage
 ON Replies FOR INSERT
 AS
@@ -946,10 +967,10 @@ GO
 DBCC CHECKIDENT ('TableName', RESEED, 0)
 
 
--- δζπϊ πϊεπιν μθαμΰεϊ
+-- Χ”Χ–Χ Χª Χ ΧªΧ•Χ Χ™Χ ΧΧΧ‘ΧΧΧ•Χª
 
 
--- λμ δχθβεψιεϊ
+-- Χ›Χ Χ”Χ§ΧΧ’Χ•Χ¨Χ™Χ•Χª
 INSERT Categories(CategoryName) VALUES ('Computers')
 INSERT Categories(CategoryName) VALUES ('Electronics')
 INSERT Categories(CategoryName) VALUES ('Art')
@@ -964,7 +985,7 @@ SELECT * FROM Categories
 GO
 
 
--- λμ δϊϊ χθβεψιεϊ
+-- Χ›Χ Χ”ΧªΧª Χ§ΧΧ’Χ•Χ¨Χ™Χ•Χª
 
 
 --Computers
@@ -1002,7 +1023,7 @@ SELECT * FROM SubCategories
 GO
 
 
--- λμ δξφαι ξεφψ
+-- Χ›Χ Χ”ΧΧ¦Χ‘Χ™ ΧΧ•Χ¦Χ¨
 INSERT Conditions(ConditionName) VALUES ('New In The Box')
 INSERT Conditions(ConditionName) VALUES ('Like New')
 INSERT Conditions(ConditionName) VALUES ('Used')
@@ -1014,7 +1035,7 @@ SELECT * FROM Conditions
 GO
 
 
--- λμ δξγιπεϊ
+-- Χ›Χ Χ”ΧΧ“Χ™Χ Χ•Χª
 INSERT Countries(CountryName) VALUES ('Israel')
 INSERT Countries(CountryName) VALUES ('Russia')
 INSERT Countries(CountryName) VALUES ('Egypt')
@@ -1026,14 +1047,14 @@ SELECT * FROM Countries
 GO
 
 
--- λμ δρθθεριν ωμ ξεφψ αδζξπδ
-INSERT OrderStatus(OrderStatusName) VALUES ('Not Yet Shipped')
+-- Χ›Χ Χ”Χ΅ΧΧΧ•Χ΅Χ™Χ Χ©Χ ΧΧ•Χ¦Χ¨ Χ‘Χ”Χ–ΧΧ Χ”
+INSERT OrderStatus(OrderStatusName) VALUES ('Not Shipped')
 INSERT OrderStatus(OrderStatusName) VALUES ('Shipped')
 INSERT OrderStatus(OrderStatusName) VALUES ('Recieved')
 GO
 
 
--- λμ δρεβι ξλιψϊ ξεφψ
+-- Χ›Χ Χ”Χ΅Χ•Χ’Χ™ ΧΧ›Χ™Χ¨Χª ΧΧ•Χ¦Χ¨
 INSERT SellTypes(SellTypeName) VALUES ('Buy Now')
 INSERT SellTypes(SellTypeName) VALUES ('Auction')
 GO
@@ -1042,7 +1063,7 @@ SELECT * FROM SellTypes
 GO
 
 
--- λμ δΰετφιεϊ μΰιζεψι ξωμεη
+-- Χ›Χ Χ”ΧΧ•Χ¤Χ¦Χ™Χ•Χª ΧΧΧ™Χ–Χ•Χ¨Χ™ ΧΧ©ΧΧ•Χ—
 INSERT ShipsToTypes(ShipsToTypeName) VALUES ('Worldwide')
 INSERT ShipsToTypes(ShipsToTypeName) VALUES ('My Country Only')
 INSERT ShipsToTypes(ShipsToTypeName) VALUES ('Contact Me')
