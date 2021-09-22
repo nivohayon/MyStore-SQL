@@ -695,6 +695,26 @@ COMMIT TRANSACTION
 GO
 
 
+--עריכת מחיר מוצר
+CREATE PROC EditProductPrice
+(
+@ProductID int,
+@Price float
+)
+AS
+BEGIN TRANSACTION
+UPDATE Products SET Price = @Price
+WHERE ProductID = @ProductID
+IF @@ERROR<>0
+BEGIN
+	ROLLBACK TRANSACTION
+	PRINT(@@ERROR)
+	RETURN
+END
+COMMIT TRANSACTION
+GO
+
+
 -- מחיקת מוצר
 CREATE PROC DeleteProduct
 (
